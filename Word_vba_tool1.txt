@@ -1,0 +1,79 @@
+Sub 一桁数字検索三文字セットD_表用()
+   'セル単位の処理とすると、選択したセルのみが抽出対象となる。
+   'このサンプルでは先頭文字と最終文字の対処が抜けている。追加すること。
+Dim 段落数 As Variant
+Dim 文字数 As Variant
+
+Set 検査範囲 = Selection.Cells
+
+For Each セル In 検査範囲
+  
+Set rng = セル.Range
+
+   段落数 = rng.Paragraphs.Count
+
+   For Each 段落 In rng.Paragraphs
+
+     Set rng2 = 段落.Range
+     rng2.MoveEnd wdCharacter, -1
+     文字数 = rng2.Characters.Count
+     Select Case 文字数
+                 
+     Case 1
+        If IsNumeric(rng2.Characters(1).Text) Then
+        検出数 = 検出数 + 1
+          If rng2.Characters(1).CharacterWidth = 7 Then
+             rng2.Characters(1).HighlightColorIndex = wdBrightGreen
+          Else
+             rng2.Characters(1).HighlightColorIndex = wdTurquoise
+          End If
+        End If
+     Case Is > 1
+        If IsNumeric(rng2.Characters(1).Text) = True And IsNumeric(rng2.Characters(2).Text) = False Then
+        検出数 = 検出数 + 1
+           If rng2.Characters(1).CharacterWidth = 7 Then
+             rng2.Characters(1).HighlightColorIndex = wdBrightGreen
+            Else
+             rng2.Characters(1).HighlightColorIndex = wdTurquoise
+            End If
+        End If
+        
+        If IsNumeric(rng2.Characters(文字数).Text) = True And IsNumeric(rng2.Characters(文字数 - 1).Text) = False Then
+        検出数 = 検出数 + 1
+           If rng2.Characters(文字数).CharacterWidth = 7 Then
+             rng2.Characters(文字数).HighlightColorIndex = wdBrightGreen
+          Else
+             rng2.Characters(文字数).HighlightColorIndex = wdTurquoise
+          End If
+        End If
+           
+     End Select
+     
+   Next
+
+With rng.Find
+     .ClearFormatting
+     .Forward = True
+     .Wrap = wdFindStop
+     .Text = "[!0-9０-９][0-9０-９]{1,1}[!0-9０-９]"
+     .MatchWildcards = True
+     .MatchByte = True
+     Do While .Execute And rng.InRange(セル.Range) = True
+        '選択範囲内の場合のみ処理実行
+        If rng.InRange(セル.Range) Then
+          検出数 = 検出数 + 1
+          If rng.Characters(2).CharacterWidth = 7 Then
+             rng.Characters(2).HighlightColorIndex = wdBrightGreen
+          Else
+             rng.Characters(2).HighlightColorIndex = wdTurquoise
+          End If
+        End If
+     Loop
+
+End With
+
+Next
+
+Selection.EndKey
+
+End Sub
