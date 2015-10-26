@@ -60,14 +60,14 @@ With rng.Find
      .MatchByte = True
      Do While .Execute And rng.InRange(セル.Range) = True
         '選択範囲内の場合のみ処理実行
-        If rng.InRange(セル.Range) Then
           検出数 = 検出数 + 1
           If rng.Characters(2).CharacterWidth = 7 Then
              rng.Characters(2).HighlightColorIndex = wdBrightGreen
           Else
              rng.Characters(2).HighlightColorIndex = wdTurquoise
           End If
-        End If
+       　rng.SetRange Start:=rng.Start, End:=rng.End - 1
+       　rng.Collapse direction:=wdCollapseEnd
      Loop
 
 End With
