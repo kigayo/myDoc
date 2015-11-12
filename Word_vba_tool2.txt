@@ -68,7 +68,7 @@ Option Explicit
                     
                      rng2.HighlightColorIndex = wdTurquoise
                   End If
-                  
+                  go to 文末処理 
                End If
                
                If rng2.Text > Format(Now, "yyyy") Then
@@ -87,8 +87,8 @@ Option Explicit
           End If
           
           End If
-          
-          Set rng2 = 段落.Range
+文末処理：
+　　　　　Set rng2 = 段落.Range
           rng2.MoveEnd wdCharacter, -1
           rng2.Start = rng2.End - 5
           区切文字 = rng2.Characters(1).Text
